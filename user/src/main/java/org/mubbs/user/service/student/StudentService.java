@@ -23,4 +23,7 @@ public class StudentService {
         return studentMapper.selectAll();
     }
 
+    public Student getOneById(int studentId) {
+        return studentMapper.selectByPrimaryKey(studentId);
+    }
 }
