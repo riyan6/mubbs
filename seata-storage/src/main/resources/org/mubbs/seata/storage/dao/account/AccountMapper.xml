@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.mubbs.seata.storage.dao.account.AccountMapper">
+  <resultMap id="BaseResultMap" type="org.mubbs.seata.storage.domain.entity.account.Account">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="account_id" jdbcType="INTEGER" property="accountId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="points" jdbcType="INTEGER" property="points" />
+  </resultMap>
+</mapper>
