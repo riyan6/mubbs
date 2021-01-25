@@ -19,15 +19,15 @@ public class OrderService {
     @Autowired
     private StorageClient storageClient;
 
-    public void createOrder() {
-        accountClient.addPoints(100, "");
-        storageClient.decStorage("coco", 10);
+    public void createOrder(Integer points, String userName, String goods, Integer count) {
+        accountClient.addPoints(points * count, userName);
+        storageClient.decStorage(goods, count);
         orderMapper.insertSelective(Order.builder()
-                .goods("")
-                .money(100)
-                .points(100)
-                .quantity(10)
-                .userName("aabb")
+                .goods(goods)
+                .money(points * count)
+                .points(points * count)
+                .quantity(count)
+                .userName(userName)
                 .build());
     }
 

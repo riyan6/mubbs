@@ -15,6 +15,9 @@ public class StorageService {
         Storage goods = storageMapper.selectOne(Storage.builder()
                 .goods(goodsName)
                 .build());
+        if (goods.getStorageCount() < storage) {
+            throw new RuntimeException("goods inventory shortage");
+        }
         goods.setStorageCount(goods.getStorageCount() - storage);
         storageMapper.updateByPrimaryKeySelective(goods);
     }
