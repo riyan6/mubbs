@@ -1,4 +1,4 @@
-package org.mubbs.seata.account.configuration;
+package org.mubbs.seata.order.configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.nacos.client.utils.StringUtils;

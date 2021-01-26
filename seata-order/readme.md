@@ -5,25 +5,23 @@
 ## Sql
 ### order
 ```sql
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`seata_account` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`seata_order` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
 
-USE `seata_account`;
+USE `seata_order`;
 
-/*Table structure for table `account` */
+/*Table structure for table `order` */
 
-DROP TABLE IF EXISTS `account`;
+DROP TABLE IF EXISTS `order`;
 
-CREATE TABLE `account` (
-  `account_id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `order` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(32) DEFAULT NULL,
   `points` int(11) DEFAULT NULL,
-  PRIMARY KEY (`account_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
-
-/*Data for the table `account` */
-
-insert  into `account`(`account_id`,`user_name`,`points`) values 
-(1,'aabb',100);
+  `goods` varchar(32) DEFAULT NULL,
+  `quantity` int(11) DEFAULT NULL,
+  `money` int(11) DEFAULT NULL,
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
 ```
 ### storage
 ```sql

@@ -1,5 +1,6 @@
 package org.mubbs.seata.order.service;
 
+import io.seata.spring.annotation.GlobalTransactional;
 import org.mubbs.seata.order.dao.order.OrderMapper;
 import org.mubbs.seata.order.domain.entity.order.Order;
 import org.mubbs.seata.order.feign.AccountClient;
@@ -19,6 +20,7 @@ public class OrderService {
     @Autowired
     private StorageClient storageClient;
 
+    @GlobalTransactional(rollbackFor = Exception.class)
     public void createOrder(Integer points, String userName, String goods, Integer count) {
         accountClient.addPoints(points * count, userName);
         storageClient.decStorage(goods, count);

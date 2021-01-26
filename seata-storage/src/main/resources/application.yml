@@ -2,15 +2,18 @@ server:
   port: 9101
 spring:
   datasource:
-    url: jdbc:mysql://58.20.41.68:27018/seata_storage?useSSL=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://8.131.62.249:11306/seata_storage?useSSL=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     hikari:
       username: root
-      password: easyevent
+      password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
   cloud:
     nacos:
       discovery:
         server-addr: 47.106.251.53:8848
         namespace: 93346eb0-444c-47c0-8e12-ccba0070e06b
+    alibaba:
+      seata:
+        tx-service-group: my_test_tx_group
   application:
     name: seataStorage
