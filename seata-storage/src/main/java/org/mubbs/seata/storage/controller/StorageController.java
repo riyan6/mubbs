@@ -11,7 +11,7 @@ public class StorageController {
     @Autowired
     private StorageService storageService;
 
-    @PostMapping("/{goods}/{count}/dec")
+    @GetMapping("/{goods}/{count}/dec")
     public void decStorage(@PathVariable("goods") String goods, @PathVariable("count") Integer count) {
         storageService.decStorage(goods, count);
     }

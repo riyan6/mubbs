@@ -1,7 +1,9 @@
 package org.mubbs.seata.storage.domain.entity.storage;
 
-import javax.persistence.*;
-
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,14 +13,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "storage")
+@TableName("storage")
 public class Storage {
-    @Id
-    @Column(name = "storage_id")
+
+    @TableId(value = "storage_id", type = IdType.AUTO)
     private Integer storageId;
 
     private String goods;
 
-    @Column(name = "storage_count")
+    @TableField("storage_count")
     private Integer storageCount;
 }
