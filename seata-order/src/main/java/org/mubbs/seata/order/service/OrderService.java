@@ -22,7 +22,7 @@ public class OrderService {
     public void createOrder(Integer points, String userName, String goods, Integer count) {
         accountClient.addPoints(points * count, userName);
         storageClient.decStorage(goods, count);
-        orderMapper.insertSelective(Order.builder()
+        orderMapper.insert(Order.builder()
                 .goods(goods)
                 .money(points * count)
                 .points(points * count)
