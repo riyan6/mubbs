@@ -3,7 +3,9 @@ package org.mubbs.seata.storage.configuration;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.nacos.client.utils.StringUtils;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
+import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.seata.rm.datasource.DataSourceProxy;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -31,27 +33,33 @@ public class DataSourceConfiguration {
         return new DataSourceProxy(dataSource);
     }
 
+//    @Bean
+//    public SqlSessionFactoryBean sqlSessionFactoryBean(DataSourceProxy dataSourceProxy,
+//                                                       MybatisPlusProperties mybatisProperties) {
+//        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
+//        bean.setDataSource(dataSourceProxy);
+//
+//        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+//        try {
+//            Resource[] mapperLocaltions = resolver.getResources(mybatisProperties.getMapperLocations()[0]);
+//            bean.setMapperLocations(mapperLocaltions);
+//
+//            if (StringUtils.isNotBlank(mybatisProperties.getConfigLocation())) {
+//                Resource[] resources = resolver.getResources(mybatisProperties.getConfigLocation());
+//                bean.setConfigLocation(resources[0]);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return bean;
+//    }
+
     @Bean
-    public SqlSessionFactoryBean sqlSessionFactoryBean(DataSourceProxy dataSourceProxy,
-                                                       MybatisPlusProperties mybatisProperties) {
-        SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
-        bean.setDataSource(dataSourceProxy);
-
-        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        try {
-            Resource[] mapperLocaltions = resolver.getResources(mybatisProperties.getMapperLocations()[0]);
-            bean.setMapperLocations(mapperLocaltions);
-
-            if (StringUtils.isNotBlank(mybatisProperties.getConfigLocation())) {
-                Resource[] resources = resolver.getResources(mybatisProperties.getConfigLocation());
-                bean.setConfigLocation(resources[0]);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return bean;
+    public SqlSessionFactory sqlSessionFactory(DataSourceProxy dataSourceProxy) throws Exception {
+        MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
+        factoryBean.setDataSource(dataSourceProxy);
+        return factoryBean.getObject();
     }
-
 
 
 }
