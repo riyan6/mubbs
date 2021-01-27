@@ -20,8 +20,8 @@ public class OrderController {
 
     @GetMapping("/create")
     public String createOrder(Integer points, String userName, String goods, Integer count) {
-        orderService.createOrder(points, userName, goods, count);
-        return "处理成功！";
+        boolean flag = orderService.createOrder(points, userName, goods, count);
+        return  flag ? "处理成功！" : "处理失败";
     }
 
 }

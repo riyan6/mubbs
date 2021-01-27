@@ -58,6 +58,13 @@ public class DataSourceConfiguration {
     public SqlSessionFactory sqlSessionFactory(DataSourceProxy dataSourceProxy) throws Exception {
         MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
         factoryBean.setDataSource(dataSourceProxy);
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        try {
+            Resource[] mapperLocaltions = resolver.getResources("classpath*:/mapper/**/*.xml");
+            factoryBean.setMapperLocations(mapperLocaltions);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return factoryBean.getObject();
     }
 

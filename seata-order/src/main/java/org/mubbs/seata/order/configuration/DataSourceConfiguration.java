@@ -1,12 +1,10 @@
 package org.mubbs.seata.order.configuration;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.nacos.client.utils.StringUtils;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusProperties;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import io.seata.rm.datasource.DataSourceProxy;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -58,9 +56,14 @@ public class DataSourceConfiguration {
     public SqlSessionFactory sqlSessionFactory(DataSourceProxy dataSourceProxy) throws Exception {
         MybatisSqlSessionFactoryBean factoryBean = new MybatisSqlSessionFactoryBean();
         factoryBean.setDataSource(dataSourceProxy);
+        ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+        try {
+            Resource[] mapperLocaltions = resolver.getResources("classpath*:/mapper/**/*.xml");
+            factoryBean.setMapperLocations(mapperLocaltions);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return factoryBean.getObject();
     }
-
-
 
 }

@@ -21,16 +21,21 @@ public class OrderService {
     private StorageClient storageClient;
 
     @GlobalTransactional(rollbackFor = Exception.class)
-    public void createOrder(Integer points, String userName, String goods, Integer count) {
-        accountClient.addPoints(points * count, userName);
-        storageClient.decStorage(goods, count);
-        orderMapper.insert(Order.builder()
-                .goods(goods)
-                .money(points * count)
-                .points(points * count)
-                .quantity(count)
-                .userName(userName)
-                .build());
+    public boolean createOrder(Integer points, String userName, String goods, Integer count) {
+        try {
+            accountClient.addPoints(points * count, userName);
+            storageClient.decStorage(goods, count);
+            orderMapper.insert(Order.builder()
+                    .goods(goods)
+                    .money(points * count)
+                    .points(points * count)
+                    .quantity(count)
+                    .userName(userName)
+                    .build());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
