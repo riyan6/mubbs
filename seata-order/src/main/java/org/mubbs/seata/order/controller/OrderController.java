@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 /**
  * @Author cpz
  * @Date 2021/1/25
@@ -19,9 +21,8 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping("/create")
-    public String createOrder(Integer points, String userName, String goods, Integer count) {
-        boolean flag = orderService.createOrder(points, userName, goods, count);
-        return  flag ? "处理成功！" : "处理失败";
+    public boolean createOrder(Integer points, String userName, String goods, Integer count) {
+        return orderService.createOrder(points, userName, goods, count);
     }
 
 }

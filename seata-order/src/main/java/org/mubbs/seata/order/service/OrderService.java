@@ -6,7 +6,11 @@ import org.mubbs.seata.order.domain.entity.order.Order;
 import org.mubbs.seata.order.feign.AccountClient;
 import org.mubbs.seata.order.feign.StorageClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class OrderService {
@@ -22,20 +26,16 @@ public class OrderService {
 
     @GlobalTransactional(rollbackFor = Exception.class)
     public boolean createOrder(Integer points, String userName, String goods, Integer count) {
-        try {
-            accountClient.addPoints(points * count, userName);
-            storageClient.decStorage(goods, count);
-            orderMapper.insert(Order.builder()
-                    .goods(goods)
-                    .money(points * count)
-                    .points(points * count)
-                    .quantity(count)
-                    .userName(userName)
-                    .build());
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+        accountClient.addPoints(points * count, userName);
+        storageClient.decStorage(goods, count);
+        orderMapper.insert(Order.builder()
+                .goods(goods)
+                .money(points * count)
+                .points(points * count)
+                .quantity(count)
+                .userName(userName)
+                .build());
+        return true;
     }
 
 }
