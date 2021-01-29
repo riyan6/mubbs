@@ -14,7 +14,7 @@ USE `seata_order`;
 
 DROP TABLE IF EXISTS `order`;
 
-CREATE TABLE `order` (
+CREATE TABLE `orders` (
   `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(32) DEFAULT NULL,
   `points` int(11) DEFAULT NULL,
