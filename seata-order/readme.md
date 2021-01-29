@@ -538,7 +538,7 @@ CREATE TABLE IF NOT EXISTS `lock_table`
   DEFAULT CHARSET = utf8;
 ```
 ### 配置 nacos 的配置
-- 下载 seata 的源码包 [Github](https://github.com/seata/seata)，配置 /script/config-center/config.txt 文件。
+- 下载 seata 的源码包 [Github](https://github.com/seata/seata) 配置 /script/config-center/config.txt 文件。
 ```text
 service.vgroupMapping.my_test_tx_group=default
 store.mode=db|redis
