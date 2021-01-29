@@ -1,22 +1,18 @@
 package org.mubbs.seata.order.service;
 
 import io.seata.spring.annotation.GlobalTransactional;
-import org.mubbs.seata.order.dao.order.OrderMapper;
-import org.mubbs.seata.order.domain.entity.order.Order;
+import org.mubbs.seata.order.dao.order.OrdersMapper;
+import org.mubbs.seata.order.domain.entity.order.Orders;
 import org.mubbs.seata.order.feign.AccountClient;
 import org.mubbs.seata.order.feign.StorageClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 @Service
-public class OrderService {
+public class OrdersService {
 
     @Autowired
-    private OrderMapper orderMapper;
+    private OrdersMapper ordersMapper;
 
     @Autowired
     private AccountClient accountClient;
@@ -28,7 +24,7 @@ public class OrderService {
     public boolean createOrder(Integer points, String userName, String goods, Integer count) {
         accountClient.addPoints(points * count, userName);
         storageClient.decStorage(goods, count);
-        orderMapper.insert(Order.builder()
+        ordersMapper.insert(Orders.builder()
                 .goods(goods)
                 .money(points * count)
                 .points(points * count)

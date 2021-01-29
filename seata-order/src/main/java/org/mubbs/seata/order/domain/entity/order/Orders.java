@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("`order`")
-public class Order {
+@TableName("orders")
+public class Orders {
 
     @TableId(value = "order_id", type = IdType.AUTO)
     private Integer orderId;
