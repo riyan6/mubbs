@@ -414,3 +414,151 @@ public class OrderService {
 
 }
 ```
+
+## 高可用 配置
+### 修改 server 包下的文件
+- registry.conf（./seata/conf/registry.conf）
+```text
+registry {
+  # 修改为nacos
+  type = "nacos"
+
+  nacos {
+    application = "seata-server"
+    serverAddr = "47.106.251.53:8848"
+    group = "SEATA_GROUP"
+    namespace = "93346eb0-444c-47c0-8e12-ccba0070e06b"
+    cluster = "default"
+    username = "nacos"
+    password = "nacoseasycase"
+  }
+  file {
+    name = "file.conf"
+  }
+}
+
+config {
+  # 修改为nacos
+  type = "nacos"
+
+  nacos {
+    serverAddr = "47.106.251.53:8848"
+    namespace = "93346eb0-444c-47c0-8e12-ccba0070e06b"
+    group = "SEATA_GROUP"
+    username = "nacos"
+    password = "nacoseasycase"
+  }
+}
+
+```
+- file.conf
+```text
+## transaction log store, only used in seata-server
+store {
+  ## 修改为db模式
+  mode = "db"
+
+  ## database store property
+  db {
+    ## the implement of javax.sql.DataSource, such as DruidDataSource(druid)/BasicDataSource(dbcp)/HikariDataSource(hikari) etc.
+    datasource = "druid"
+    ## mysql/oracle/postgresql/h2/oceanbase etc.
+    dbType = "mysql"
+    driverClassName = "com.mysql.cj.jdbc.Driver"
+    url = "jdbc:mysql://8.131.62.249:11306/seata?useSSL=true&useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8"
+    user = "root"
+    password = "123456"
+    minConn = 5
+    maxConn = 30
+    globalTable = "global_table"
+    branchTable = "branch_table"
+    lockTable = "lock_table"
+    queryLimit = 100
+    maxWait = 5000
+  }
+}
+```
+### 创建 seata 库
+```sql
+-- -------------------------------- The script used when storeMode is 'db' --------------------------------
+-- the table to store GlobalSession data
+CREATE TABLE IF NOT EXISTS `global_table`
+(
+    `xid`                       VARCHAR(128) NOT NULL,
+    `transaction_id`            BIGINT,
+    `status`                    TINYINT      NOT NULL,
+    `application_id`            VARCHAR(32),
+    `transaction_service_group` VARCHAR(32),
+    `transaction_name`          VARCHAR(128),
+    `timeout`                   INT,
+    `begin_time`                BIGINT,
+    `application_data`          VARCHAR(2000),
+    `gmt_create`                DATETIME,
+    `gmt_modified`              DATETIME,
+    PRIMARY KEY (`xid`),
+    KEY `idx_gmt_modified_status` (`gmt_modified`, `status`),
+    KEY `idx_transaction_id` (`transaction_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+-- the table to store BranchSession data
+CREATE TABLE IF NOT EXISTS `branch_table`
+(
+    `branch_id`         BIGINT       NOT NULL,
+    `xid`               VARCHAR(128) NOT NULL,
+    `transaction_id`    BIGINT,
+    `resource_group_id` VARCHAR(32),
+    `resource_id`       VARCHAR(256),
+    `branch_type`       VARCHAR(8),
+    `status`            TINYINT,
+    `client_id`         VARCHAR(64),
+    `application_data`  VARCHAR(2000),
+    `gmt_create`        DATETIME(6),
+    `gmt_modified`      DATETIME(6),
+    PRIMARY KEY (`branch_id`),
+    KEY `idx_xid` (`xid`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+
+-- the table to store lock data
+CREATE TABLE IF NOT EXISTS `lock_table`
+(
+    `row_key`        VARCHAR(128) NOT NULL,
+    `xid`            VARCHAR(96),
+    `transaction_id` BIGINT,
+    `branch_id`      BIGINT       NOT NULL,
+    `resource_id`    VARCHAR(256),
+    `table_name`     VARCHAR(32),
+    `pk`             VARCHAR(36),
+    `gmt_create`     DATETIME,
+    `gmt_modified`   DATETIME,
+    PRIMARY KEY (`row_key`),
+    KEY `idx_branch_id` (`branch_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8;
+```
+### 配置 nacos 的配置
+- 下载 seata 的源码包 [Github](https://github.com/seata/seata)，配置 /script/config-center/config.txt 文件。
+```text
+service.vgroupMapping.my_test_tx_group=default
+store.mode=db|redis
+-----db-----
+store.db.datasource=druid
+store.db.dbType=mysql
+store.db.driverClassName=com.mysql.jdbc.Driver
+store.db.url=jdbc:mysql://127.0.0.1:3306/seata?useUnicode=true
+store.db.user=root
+store.db.password=123456
+----redis----
+store.redis.host=127.0.0.1
+store.redis.port=6379
+store.redis.maxConn=10
+store.redis.minConn=1
+store.redis.database=0
+store.redis.password=null
+store.redis.queryLimit=100
+```
+- 接着执行 nacos/nacos-config.sh
+`./nacos-config.sh -h nacos的地址 -p nacos端口 -g 组 -t 命名空间 -u 账号 -w 密码`，等待脚本执行完毕，发现 nacos 配置中心已有一大串配置就行了。
+### Link
+[官方文档](http://seata.io/zh-cn/docs/ops/deploy-ha.html)
