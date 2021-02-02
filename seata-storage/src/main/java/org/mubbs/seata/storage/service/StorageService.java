@@ -24,4 +24,10 @@ public class StorageService {
         storageMapper.updateById(goods);
     }
 
+    public Storage storageDetailByName(String goodsName) {
+        QueryWrapper<Storage> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("goods", goodsName);
+        Storage goodsDetail = storageMapper.selectOne(queryWrapper);
+        return goodsDetail;
+    }
 }
